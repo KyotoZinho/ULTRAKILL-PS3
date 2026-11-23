@@ -63,3 +63,11 @@ jobs:
           pkg --contentid $CID build/pkg/ build/ultrakill_ps3.pkg
           cp build/ultrakill_ps3.pkg build/ultrakill_ps3.gnpdrm.pkg
           package_finalize build/ultrakill_ps3.gnpdrm.pkg
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ultrakill-ps3
+          path: |
+            src_tree/ULTRAKILL_PS3_Port_Completo/build/*.elf
+            src_tree/ULTRAKILL_PS3_Port_Completo/build/*.self
+            src_tree/ULTRAKILL_PS3_Port_Completo/build/*.pkg
