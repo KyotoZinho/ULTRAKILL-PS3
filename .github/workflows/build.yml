@@ -1,0 +1,32 @@
+name: Build PS3
+on:
+  workflow_dispatch:
+  push:
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: unzip -q ULTRAKILL_PS3_Port_GitHubActions.zip -d extracted
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source
+          path: extracted/ULTRAKILL_PS3_Port_Completo
+  build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    container: ps3dev/ps3dev:latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: source
+          path: tree
+      - run: make -C tree
+      - run: make -C tree pkg
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ultrakill-ps3
+          path: |
+            tree/build/*.elf
+            tree/build/*.self
+            tree/build/*.pkg
