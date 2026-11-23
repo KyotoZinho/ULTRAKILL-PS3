@@ -55,12 +55,11 @@ jobs:
           export PATH="$PATH:$PS3DEV/bin:$PS3DEV/ppu/bin:$PS3DEV/spu/bin"
           cd src_tree/ULTRAKILL_PS3_Port_Completo
           make
-          make pkg
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ultrakill-ps3
-          path: |
-            src_tree/ULTRAKILL_PS3_Port_Completo/build/*.elf
-            src_tree/ULTRAKILL_PS3_Port_Completo/build/*.self
-            src_tree/ULTRAKILL_PS3_Port_Completo/build/*.pkg
+          CID=UP0001-ULTRAKILL_00-0000000000000000
+          mkdir -p build/pkg/USRDIR
+          cp $PS3DEV/bin/ICON0.PNG build/pkg/ICON0.PNG
+          make_self_npdrm build/ultrakill_ps3.elf build/pkg/USRDIR/EBOOT.BIN $CID
+          sfo --title "ULTRAKILL PS3" --appid ULTRAKILL -f $PS3DEV/bin/sfo.xml build/pkg/PARAM.SFO
+          pkg --contentid $CID build/pkg/ build/ultrakill_ps3.pkg
+          cp build/ultrakill_ps3.pkg build/ultrakill_ps3.gnpdrm.pkg
+          package_finalize build/ultrakill_ps3.gnpdrm.pkg
